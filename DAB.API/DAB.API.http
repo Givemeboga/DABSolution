@@ -1,0 +1,6 @@
+@DAB.API_HostAddress = http://localhost:5295
+
+GET {{DAB.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
