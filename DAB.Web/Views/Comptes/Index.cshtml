@@ -1,0 +1,85 @@
+@{
+    ViewData["Title"] = "Accounts Overview";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold mb-0">My Accounts</h4>
+    <a href="#" class="btn btn-primary shadow-sm"><i class="bi bi-plus-lg me-2"></i>Add Account</a>
+</div>
+
+<div class="fintech-card">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="input-group" style="max-width: 300px;">
+            <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+            <input type="text" class="form-control border-start-0 ps-0" placeholder="Search accounts...">
+        </div>
+        <button class="btn btn-outline-secondary"><i class="bi bi-funnel me-2"></i>Filter</button>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-fintech table-hover">
+            <thead>
+                <tr>
+                    <th>Account Info</th>
+                    <th>Account Holder</th>
+                    <th>Type</th>
+                    <th>Balance</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Dummy Row 1 -->
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <div class="bg-primary text-white rounded p-2 me-3">
+                                <i class="bi bi-wallet2"></i>
+                            </div>
+                            <div>
+                                <span class="d-block fw-bold">FR1001</span>
+                                <span class="text-muted small">Banque de Paris</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="fw-semibold">Alice Dupont</span>
+                    </td>
+                    <td><span class="badge bg-primary text-white status-badge">Courant</span></td>
+                    <td>
+                        <span class="fs-5 fw-bold text-dark">€ 5,000.00</span>
+                    </td>
+                    <td class="text-end">
+                        <a href="#" class="btn btn-sm btn-light text-primary me-2"><i class="bi bi-eye"></i></a>
+                        <a href="#" class="btn btn-sm btn-light text-muted"><i class="bi bi-three-dots-vertical"></i></a>
+                    </td>
+                </tr>
+                
+                <!-- Dummy Row 2 -->
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <div class="bg-success text-white rounded p-2 me-3">
+                                <i class="bi bi-piggy-bank"></i>
+                            </div>
+                            <div>
+                                <span class="d-block fw-bold">FR1002</span>
+                                <span class="text-muted small">Banque de Paris</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="fw-semibold">Bob Martin</span>
+                    </td>
+                    <td><span class="badge bg-success text-white status-badge">Epargne</span></td>
+                    <td>
+                        <span class="fs-5 fw-bold text-success">€ 150.00</span>
+                    </td>
+                    <td class="text-end">
+                        <a href="#" class="btn btn-sm btn-light text-primary me-2"><i class="bi bi-eye"></i></a>
+                        <a href="#" class="btn btn-sm btn-light text-muted"><i class="bi bi-three-dots-vertical"></i></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

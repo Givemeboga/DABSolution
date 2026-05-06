@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DAB.API.Data;
 using DAB.API.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System;
 
 namespace DAB.API.Controllers
 {
@@ -21,14 +19,12 @@ namespace DAB.API.Controllers
             _context = context;
         }
 
-        // GET: api/Transactions
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Transaction>>> GetTransactions()
         {
             return await _context.Transactions.ToListAsync();
         }
 
-        // GET: api/Transactions/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Transaction>> GetTransaction(int id)
         {
@@ -42,67 +38,48 @@ namespace DAB.API.Controllers
             return transaction;
         }
 
-        // PUT: api/Transactions/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutTransaction(int id, Transaction transaction)
+        [HttpPost("retrait")]
+        public async Task<ActionResult<TransactionRetrait>> PostRetrait(TransactionRetrait retrait)
         {
-            if (id != transaction.Id)
+            var compte = await _context.Comptes.FindAsync(retrait.CompteId);
+            if (compte == null) return NotFound("Compte not found.");
+
+            if (compte.Solde < retrait.Montant)
             {
-                return BadRequest();
+                return BadRequest("Solde is insufficient for this withdrawal.");
             }
 
-            _context.Entry(transaction).State = EntityState.Modified;
+            compte.Solde -= retrait.Montant;
+            retrait.Date = DateTime.UtcNow;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TransactionExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Transactions
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Transaction>> PostTransaction(Transaction transaction)
-        {
-            _context.Transactions.Add(transaction);
+            _context.Transactions.Add(retrait);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetTransaction", new { id = transaction.Id }, transaction);
+            return CreatedAtAction(nameof(GetTransaction), new { id = retrait.Id }, retrait);
         }
 
-        // DELETE: api/Transactions/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTransaction(int id)
+        [HttpPost("transfert")]
+        public async Task<ActionResult<TransactionTransfert>> PostTransfert(TransactionTransfert transfert)
         {
-            var transaction = await _context.Transactions.FindAsync(id);
-            if (transaction == null)
+            var compteOrigine = await _context.Comptes.FindAsync(transfert.CompteId);
+            if (compteOrigine == null) return NotFound("Origin account not found.");
+
+            if (compteOrigine.Solde < transfert.Montant)
             {
-                return NotFound();
+                return BadRequest("Solde is insufficient for this transfer.");
             }
 
-            _context.Transactions.Remove(transaction);
+            var compteDestination = await _context.Comptes.FirstOrDefaultAsync(c => c.NumeroCompte == transfert.NumeroCompteDestination);
+            if (compteDestination == null) return NotFound("Destination account not found.");
+
+            compteOrigine.Solde -= transfert.Montant;
+            compteDestination.Solde += transfert.Montant;
+            transfert.Date = DateTime.UtcNow;
+
+            _context.Transactions.Add(transfert);
             await _context.SaveChangesAsync();
 
-            return NoContent();
-        }
-
-        private bool TransactionExists(int id)
-        {
-            return _context.Transactions.Any(e => e.Id == id);
+            return CreatedAtAction(nameof(GetTransaction), new { id = transfert.Id }, transfert);
         }
     }
 }

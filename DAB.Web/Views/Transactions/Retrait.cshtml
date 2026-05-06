@@ -1,0 +1,72 @@
+@{
+    ViewData["Title"] = "New Withdrawal";
+}
+
+<div class="row min-vh-100 align-items-center justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+        <div class="fintech-card p-5 mt-n5 border-top border-4 border-danger">
+            <div class="text-center mb-4">
+                <div class="bg-danger bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3 mx-auto">
+                    <i class="bi bi-cash text-danger fs-2"></i>
+                </div>
+                <h3 class="fw-bold text-dark">ATM Withdrawal</h3>
+                <p class="text-muted">Enter withdrawal details below</p>
+            </div>
+
+            <form>
+                <!-- Select Account -->
+                <div class="mb-4">
+                    <label class="form-label text-muted fw-semibold small text-uppercase">From Account</label>
+                    <select class="form-select form-select-lg bg-light border-0 shadow-none">
+                        <option value="1">FR9999 - John Doe (€ 1,000.00)</option>
+                        <option value="2">FR1001 - Alice Dupont (€ 5,000.00)</option>
+                    </select>
+                </div>
+
+                <!-- Select DAB -->
+                <div class="mb-4">
+                    <label class="form-label text-muted fw-semibold small text-uppercase">ATM Location (DAB)</label>
+                    <select class="form-select form-select-lg bg-light border-0 shadow-none">
+                        <option value="1">DAB-P1 (Gare de Lyon)</option>
+                    </select>
+                </div>
+
+                <!-- Amount -->
+                <div class="mb-5">
+                    <label class="form-label text-muted fw-semibold small text-uppercase">Amount</label>
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-text border-0 bg-light fw-bold text-dark">€</span>
+                        <input type="number" class="form-control border-0 bg-light shadow-none fw-bold fs-4" placeholder="0.00" step="10">
+                    </div>
+                    <div class="form-text mt-2 d-flex justify-content-between">
+                        <span>Min: €10</span>
+                        <span>Daily Limit: €1,000</span>
+                    </div>
+                </div>
+
+                <!-- Autre Agence -->
+                <div class="form-check form-switch mb-5">
+                    <input class="form-check-input focus-danger" type="checkbox" id="autreAgence">
+                    <label class="form-check-label" for="autreAgence">External ATM / Another Agency Fee warning</label>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-danger btn-lg w-100 fw-bold shadow-sm p-3">
+                    <i class="bi bi-check-circle me-2"></i>Confirm Withdrawal
+                </button>
+                <div class="text-center mt-3">
+                    <a href="/Transactions" class="text-muted text-decoration-none small">Cancel & Go Back</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<style>
+.form-check-input:checked {
+    background-color: var(--danger);
+    border-color: var(--danger);
+}
+.focus-danger:focus {
+    box-shadow: 0 0 0 0.25rem rgba(239, 68, 68, 0.25);
+}
+</style>

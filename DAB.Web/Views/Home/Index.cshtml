@@ -1,8 +1,189 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@{
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="row g-4 mb-4">
+    <!-- Metric 1: Total Accounts -->
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="fintech-card metric-card">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h6 class="text-muted fw-bold mb-1 text-uppercase">Total Accounts</h6>
+                    <h3 class="fw-bold mb-0 text-dark">4</h3>
+                </div>
+                <div class="icon-box bg-primary text-white" style="background-color: var(--primary) !important;">
+                    <i class="bi bi-wallet2 text-white"></i>
+                </div>
+            </div>
+            <div class="text-success small fw-semibold">
+                <i class="bi bi-arrow-up-right me-1"></i>+2 this month
+            </div>
+        </div>
+    </div>
+
+    <!-- Metric 2: Total Balance -->
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="fintech-card metric-card">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h6 class="text-muted fw-bold mb-1 text-uppercase">Total Balance</h6>
+                    <h3 class="fw-bold mb-0 text-dark">€ 14,200.50</h3>
+                </div>
+                <div class="icon-box bg-success text-white">
+                    <i class="bi bi-currency-euro text-white"></i>
+                </div>
+            </div>
+            <div class="text-success small fw-semibold">
+                <i class="bi bi-arrow-up-right me-1"></i>+12.5% vs last month
+            </div>
+        </div>
+    </div>
+
+    <!-- Metric 3: Active Transactions -->
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="fintech-card metric-card">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h6 class="text-muted fw-bold mb-1 text-uppercase">Transactions</h6>
+                    <h3 class="fw-bold mb-0 text-dark">142</h3>
+                </div>
+                <div class="icon-box bg-secondary text-white">
+                    <i class="bi bi-arrow-left-right text-white"></i>
+                </div>
+            </div>
+            <div class="text-muted small fw-semibold">
+                Processed this week
+            </div>
+        </div>
+    </div>
+
+    <!-- Metric 4: Connected ATMs -->
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="fintech-card metric-card">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h6 class="text-muted fw-bold mb-1 text-uppercase">Connected ATMs</h6>
+                    <h3 class="fw-bold mb-0 text-dark">2</h3>
+                </div>
+                <div class="icon-box bg-warning text-white">
+                    <i class="bi bi-cash-stack text-white"></i>
+                </div>
+            </div>
+            <div class="text-muted small fw-semibold">
+                All systems operational
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Quick Actions -->
+    <div class="col-12 col-lg-8">
+        <div class="fintech-card h-100">
+            <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
+                <h5 class="fw-bold mb-0">Recent Activity</h5>
+                <a href="/Transactions" class="btn btn-sm btn-light">View All</a>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table table-hover table-fintech border-0 table-borderless">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Date</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="bg-primary text-white p-2 rounded">
+                                        <i class="bi bi-send-check"></i>
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold text-dark">Transfer</div>
+                                        <div class="text-muted small">To: FR1002</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-muted">Today, 14:30</td>
+                            <td class="fw-bold text-danger">- €250.00</td>
+                            <td><span class="status-badge badge-success">Completed</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="bg-danger text-white p-2 rounded">
+                                        <i class="bi bi-box-arrow-up-right"></i>
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold text-dark">Withdrawal</div>
+                                        <div class="text-muted small">ATM: DAB-P1</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-muted">Yesterday, 09:15</td>
+                            <td class="fw-bold text-danger">- €100.00</td>
+                            <td><span class="status-badge badge-success">Completed</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="bg-success text-white p-2 rounded text-success">
+                                        <i class="bi bi-arrow-down-left"></i>
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold text-dark">Deposit</div>
+                                        <div class="text-muted small">From: FR9999</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-muted">Oct 24, 2026</td>
+                            <td class="fw-bold text-success">+ €1,500.00</td>
+                            <td><span class="status-badge badge-success">Completed</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="col-12 col-lg-4">
+        <div class="fintech-card h-100">
+            <h5 class="fw-bold mb-4">Quick Actions</h5>
+            
+            <a href="/Transactions/Retrait" class="btn btn-light w-100 p-3 text-start mb-3 d-flex align-items-center justify-content-between text-decoration-none shadow-sm rounded-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="bg-danger p-2 rounded text-white">
+                        <i class="bi bi-cash"></i>
+                    </div>
+                    <span class="fw-bold text-dark">New Withdrawal</span>
+                </div>
+                <i class="bi bi-chevron-right text-muted"></i>
+            </a>
+
+            <a href="/Transactions/Transfert" class="btn btn-light w-100 p-3 text-start mb-3 d-flex align-items-center justify-content-between text-decoration-none shadow-sm rounded-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="bg-primary p-2 rounded text-white">
+                        <i class="bi bi-send"></i>
+                    </div>
+                    <span class="fw-bold text-dark">Make a Transfer</span>
+                </div>
+                <i class="bi bi-chevron-right text-muted"></i>
+            </a>
+
+            <a href="/Comptes/Create" class="btn btn-light w-100 p-3 text-start d-flex align-items-center justify-content-between text-decoration-none shadow-sm rounded-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="bg-success p-2 rounded text-white text-success">
+                        <i class="bi bi-plus-circle"></i>
+                    </div>
+                    <span class="fw-bold text-dark">Add Account</span>
+                </div>
+                <i class="bi bi-chevron-right text-muted"></i>
+            </a>
+        </div>
+    </div>
 </div>

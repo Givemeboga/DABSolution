@@ -1,0 +1,55 @@
+<nav id="sidebar">
+    <div class="sidebar-header">
+        <i class="bi bi-bank"></i>
+        <span>DAB System</span>
+    </div>
+    <ul class="sidebar-nav">
+        <li class="nav-item">
+            <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" ? "active" : "")" href="/">
+                <i class="bi bi-grid-1x2"></i>
+                Dashboard
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Comptes" ? "active" : "")" href="/Comptes">
+                <i class="bi bi-wallet2"></i>
+                Comptes
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Transactions" ? "active" : "")" href="/Transactions">
+                <i class="bi bi-arrow-left-right"></i>
+                Transactions
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/Transactions/Retrait">
+                <i class="bi bi-box-arrow-up-right"></i>
+                Nouveau Retrait
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/Transactions/Transfert">
+                <i class="bi bi-send"></i>
+                Nouveau Transfert
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Banques" ? "active" : "")" href="/Banques">
+                <i class="bi bi-building"></i>
+                Banques
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Dabs" ? "active" : "")" href="/Dabs">
+                <i class="bi bi-cash-stack"></i>
+                DABs (ATM)
+            </a>
+        </li>
+    </ul>
+
+    <!-- User Section At Bottom of Sidebar -->
+    <div class="mt-auto p-4 border-top">
+        <partial name="_LoginPartial" />
+    </div>
+</nav>

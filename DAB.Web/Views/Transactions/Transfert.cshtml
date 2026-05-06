@@ -1,0 +1,54 @@
+@{
+    ViewData["Title"] = "New Transfer";
+}
+
+<div class="row min-vh-100 align-items-center justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+        <div class="fintech-card p-5 mt-n5 border-top border-4 border-primary">
+            <div class="text-center mb-4">
+                <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3 mx-auto">
+                    <i class="bi bi-send text-primary fs-2"></i>
+                </div>
+                <h3 class="fw-bold text-dark">Send Money</h3>
+                <p class="text-muted">Instant transfer between accounts</p>
+            </div>
+
+            <form>
+                <!-- Select Source Account -->
+                <div class="mb-4">
+                    <label class="form-label text-muted fw-semibold small text-uppercase">Source Account</label>
+                    <select class="form-select form-select-lg bg-light border-0 shadow-none">
+                        <option value="1">FR9999 - John Doe (€ 1,000.00)</option>
+                        <option value="2">FR1001 - Alice Dupont (€ 5,000.00)</option>
+                    </select>
+                </div>
+
+                <!-- Destination Account -->
+                <div class="mb-4">
+                    <label class="form-label text-muted fw-semibold small text-uppercase">Destination IBAN / Account Number</label>
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-text border-0 bg-light"><i class="bi bi-bank text-muted"></i></span>
+                        <input type="text" class="form-control border-0 bg-light shadow-none fw-bold" placeholder="FRXXXX...">
+                    </div>
+                </div>
+
+                <!-- Amount -->
+                <div class="mb-5">
+                    <label class="form-label text-muted fw-semibold small text-uppercase">Amount</label>
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-text border-0 bg-light fw-bold text-dark">€</span>
+                        <input type="number" class="form-control border-0 bg-light shadow-none fw-bold fs-4" placeholder="0.00">
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="button" class="btn btn-primary btn-lg w-100 fw-bold shadow-sm p-3">
+                    <i class="bi bi-arrow-right-circle me-2"></i>Proceed to Transfer
+                </button>
+                <div class="text-center mt-3">
+                    <a href="/Transactions" class="text-muted text-decoration-none small">Cancel & Go Back</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
