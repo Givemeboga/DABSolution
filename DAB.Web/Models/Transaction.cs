@@ -31,7 +31,7 @@ namespace DAB.Web.Models
         public string? Référence { get; set; }
         
         // Polymorphic fields
-        public bool? AutreAgence { get; set; }
+        public bool AutreAgence { get; set; }
         public string? NumeroCompteDestination { get; set; }
 
         public string CatégorieLabel => Catégorie switch

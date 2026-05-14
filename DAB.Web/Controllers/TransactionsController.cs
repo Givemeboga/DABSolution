@@ -21,15 +21,22 @@ namespace DAB.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var data = await _service.GetAll();
+            var comptes = await _http.GetFromJsonAsync<List<Compte>>("api/comptes") ?? new List<Compte>();
+
+            var compteIds = comptes.Select(c => c.Id).ToHashSet();
+            data = data.Where(t => compteIds.Contains(t.CompteId)).ToList();
+
+            ViewBag.Comptes = comptes;
             return View(data);
         }
 
         [Authorize(Roles = "User")]
         public async Task<IActionResult> Retrait()
         {
-            var comptes = await _http.GetFromJsonAsync<List<Compte>>("api/comptes");
-            ViewBag.Comptes = comptes ?? new List<Compte>();
-            return View();
+            var comptes = await GetAccessibleComptesAsync();
+            var sourceCompte = comptes.FirstOrDefault();
+            ViewBag.SourceCompte = sourceCompte;
+            return View(new Transaction { CompteId = sourceCompte?.Id ?? 0 });
         }
 
         [HttpPost]
@@ -44,9 +51,12 @@ namespace DAB.Web.Controllers
         [Authorize(Roles = "User")]
         public async Task<IActionResult> Transfert()
         {
-            var comptes = await _http.GetFromJsonAsync<List<Compte>>("api/comptes");
-            ViewBag.Comptes = comptes ?? new List<Compte>();
-            return View();
+            var sourceComptes = await GetAccessibleComptesAsync();
+            var sourceCompte = sourceComptes.FirstOrDefault();
+            ViewBag.SourceCompte = sourceCompte;
+            var destinationComptes = await _http.GetFromJsonAsync<List<Compte>>("api/comptes") ?? new List<Compte>();
+            ViewBag.DestinationComptes = destinationComptes;
+            return View(new Transaction { CompteId = sourceCompte?.Id ?? 0 });
         }
 
         [HttpPost]
@@ -56,6 +66,21 @@ namespace DAB.Web.Controllers
             await _service.Transfert(t);
             TempData["Success"] = "Transfer completed successfully.";
             return RedirectToAction("Index");
+        }
+
+        private async Task<List<Compte>> GetAccessibleComptesAsync()
+        {
+            var comptes = await _http.GetFromJsonAsync<List<Compte>>("api/comptes") ?? new List<Compte>();
+
+            if (User.IsInRole("Admin"))
+            {
+                return comptes;
+            }
+
+            var userName = User.Identity?.Name ?? string.Empty;
+            return comptes
+                .Where(c => string.Equals(c.Proprietaire, userName, StringComparison.OrdinalIgnoreCase))
+                .ToList();
         }
     }
 }

@@ -41,7 +41,6 @@ builder.Services.AddControllersWithViews(options =>
 builder.Services.AddRazorPages(options =>
 {
     options.Conventions.AllowAnonymousToAreaPage("Identity", "/Account/Login");
-    options.Conventions.AllowAnonymousToAreaPage("Identity", "/Account/Register");
     options.Conventions.AllowAnonymousToAreaPage("Identity", "/Account/ForgotPassword");
     options.Conventions.AllowAnonymousToAreaPage("Identity", "/Account/ResetPassword");
 });
@@ -88,6 +87,15 @@ using (var scope = app.Services.CreateScope())
         if (result.Succeeded)
         {
             userManager.AddToRoleAsync(adminUser, "Admin").Wait();
+        }
+    }
+
+    var existingUsers = userManager.Users.ToList();
+    foreach (var user in existingUsers)
+    {
+        if (!userManager.IsInRoleAsync(user, "Admin").Result)
+        {
+            userManager.DeleteAsync(user).Wait();
         }
     }
 }

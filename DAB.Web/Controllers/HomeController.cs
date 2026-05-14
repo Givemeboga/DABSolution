@@ -2,6 +2,7 @@ using DAB.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Linq;
 
 namespace DAB.Web.Controllers
 {
@@ -22,8 +23,16 @@ namespace DAB.Web.Controllers
 
             try
             {
-                var comptes = await _http.GetFromJsonAsync<List<Compte>>("api/comptes");
-                if (comptes != null)
+                var comptes = await _http.GetFromJsonAsync<List<Compte>>("api/comptes") ?? new List<Compte>();
+                if (!User.IsInRole("Admin"))
+                {
+                    var userName = User.Identity?.Name ?? string.Empty;
+                    comptes = comptes
+                        .Where(c => string.Equals(c.Proprietaire, userName, StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+                }
+
+                if (comptes.Any())
                 {
                     vm.TotalAccounts = comptes.Count;
                     vm.TotalBalance = comptes.Sum(c => c.Solde);
@@ -32,8 +41,14 @@ namespace DAB.Web.Controllers
                     vm.ConnectedAtms = comptes.Where(c => c.DabId.HasValue).Select(c => c.DabId).Distinct().Count();
                 }
 
-                var transactions = await _http.GetFromJsonAsync<List<Transaction>>("api/transactions");
-                if (transactions != null)
+                var transactions = await _http.GetFromJsonAsync<List<Transaction>>("api/transactions") ?? new List<Transaction>();
+                if (!User.IsInRole("Admin"))
+                {
+                    var compteIds = comptes.Select(c => c.Id).ToHashSet();
+                    transactions = transactions.Where(t => compteIds.Contains(t.CompteId)).ToList();
+                }
+
+                if (transactions.Any())
                 {
                     vm.TransactionsCount = transactions.Count;
                     vm.RecentTransactions = transactions.OrderByDescending(t => t.Date).Take(5).ToList();

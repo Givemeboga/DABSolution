@@ -1,7 +1,7 @@
 @model DAB.Web.Models.Transaction
 @{
     ViewData["Title"] = "New Withdrawal";
-    var comptes = ViewBag.Comptes as List<DAB.Web.Models.Compte> ?? new List<DAB.Web.Models.Compte>();
+    var sourceCompte = ViewBag.SourceCompte as DAB.Web.Models.Compte;
 }
 
 <div class="row min-vh-100 align-items-center justify-content-center">
@@ -16,16 +16,17 @@
             </div>
 
             <form asp-action="Retrait" method="post">
-                <!-- Select Account -->
+                <input type="hidden" asp-for="CompteId" />
                 <div class="mb-4">
-                    <label class="form-label text-muted fw-semibold small text-uppercase" asp-for="CompteId">From Account</label>
-                    <select asp-for="CompteId" class="form-select form-select-lg bg-light border-0 shadow-none" required>
-                        <option value="">-- Select an account --</option>
-                        @foreach (var c in comptes)
+                    <label class="form-label text-muted fw-semibold small text-uppercase">From Account</label>
+                    <div class="fintech-card bg-light border-0 p-3">
+                        <div class="fw-bold text-dark">@sourceCompte?.NumeroCompte</div>
+                        <div class="text-muted small">@sourceCompte?.Proprietaire</div>
+                        @if (sourceCompte != null)
                         {
-                            <option value="@c.Id">@c.NumeroCompte - @c.Proprietaire (€ @c.Solde.ToString("N2"))</option>
+                            <div class="text-muted small">Balance: € @sourceCompte.Solde.ToString("N2")</div>
                         }
-                    </select>
+                    </div>
                 </div>
 
                 <!-- Amount -->

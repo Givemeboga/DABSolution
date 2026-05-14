@@ -100,10 +100,6 @@
                 new Dab { Id = 1, DABId = "DAB-P1", Localisation = "Gare de Lyon" }
             );
 
-            modelBuilder.Entity<Compte>().HasData(
-                new Compte { Id = 1, NumeroCompte = "FR1001", Proprietaire = "Alice Dupont", Solde = 5000.0, Type = TypeCompte.Courant, BanqueId = 1, DabId = 1 },
-                new Compte { Id = 2, NumeroCompte = "FR1002", Proprietaire = "Bob Martin", Solde = 150.0, Type = TypeCompte.Epargne, BanqueId = 1, DabId = 1 }
-            );
         }
     }
 }

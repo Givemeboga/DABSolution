@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
+using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
@@ -21,7 +22,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DAB.Web.Areas.Identity.Pages.Account
 {
-    [AllowAnonymous]
+    [Authorize(Roles = "Admin")]
     public class RegisterModel : PageModel
     {
         private readonly SignInManager<IdentityUser> _signInManager;
@@ -30,13 +31,15 @@ namespace DAB.Web.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly IHttpClientFactory _httpClientFactory;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
             IUserStore<IdentityUser> userStore,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IHttpClientFactory httpClientFactory)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -44,6 +47,7 @@ namespace DAB.Web.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _httpClientFactory = httpClientFactory;
         }
 
         /// <summary>
@@ -126,6 +130,14 @@ namespace DAB.Web.Areas.Identity.Pages.Account
                     // Automatically assign "User" role to newly registered users
                     await _userManager.AddToRoleAsync(user, "User");
 
+                    var accountCreated = await CreateDefaultAccountAsync(Input.Email);
+                    if (!accountCreated)
+                    {
+                        await _userManager.DeleteAsync(user);
+                        ModelState.AddModelError(string.Empty, "Failed to create the default account. Please try again.");
+                        return Page();
+                    }
+
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
@@ -156,6 +168,29 @@ namespace DAB.Web.Areas.Identity.Pages.Account
 
             // If we got this far, something failed, redisplay form
             return Page();
+        }
+
+        private async Task<bool> CreateDefaultAccountAsync(string email)
+        {
+            var http = _httpClientFactory.CreateClient("API");
+            var compte = new DAB.Web.Models.Compte
+            {
+                NumeroCompte = $"FR{DateTime.UtcNow:yyyyMMddHHmmss}",
+                Proprietaire = email,
+                Solde = 0m,
+                Type = 1,
+                BanqueId = 1,
+                DabId = 1
+            };
+
+            var response = await http.PostAsJsonAsync("api/comptes", compte);
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+
+            _logger.LogError("Failed to create default account for {Email}. Status: {StatusCode}", email, response.StatusCode);
+            return false;
         }
 
         private IdentityUser CreateUser()

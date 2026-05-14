@@ -1,7 +1,8 @@
 @model DAB.Web.Models.Transaction
 @{
     ViewData["Title"] = "New Transfer";
-    var comptes = ViewBag.Comptes as List<DAB.Web.Models.Compte> ?? new List<DAB.Web.Models.Compte>();
+    var sourceCompte = ViewBag.SourceCompte as DAB.Web.Models.Compte;
+    var destinationComptes = ViewBag.DestinationComptes as List<DAB.Web.Models.Compte> ?? new List<DAB.Web.Models.Compte>();
 }
 
 <div class="row min-vh-100 align-items-center justify-content-center">
@@ -16,25 +17,29 @@
             </div>
 
             <form asp-action="Transfert" method="post">
-                <!-- Select Source Account -->
+                <input type="hidden" asp-for="CompteId" />
                 <div class="mb-4">
-                    <label class="form-label text-muted fw-semibold small text-uppercase" asp-for="CompteId">Source Account</label>
-                    <select asp-for="CompteId" class="form-select form-select-lg bg-light border-0 shadow-none" required>
-                        <option value="">-- Select source account --</option>
-                        @foreach (var c in comptes)
+                    <label class="form-label text-muted fw-semibold small text-uppercase">Source Account</label>
+                    <div class="fintech-card bg-light border-0 p-3">
+                        <div class="fw-bold text-dark">@sourceCompte?.NumeroCompte</div>
+                        <div class="text-muted small">@sourceCompte?.Proprietaire</div>
+                        @if (sourceCompte != null)
                         {
-                            <option value="@c.Id">@c.NumeroCompte - @c.Proprietaire (€ @c.Solde.ToString("N2"))</option>
+                            <div class="text-muted small">Balance: € @sourceCompte.Solde.ToString("N2")</div>
                         }
-                    </select>
+                    </div>
                 </div>
 
                 <!-- Destination Account -->
                 <div class="mb-4">
-                    <label class="form-label text-muted fw-semibold small text-uppercase" asp-for="NumeroCompteDestination">Destination IBAN / Account Number</label>
-                    <div class="input-group input-group-lg">
-                        <span class="input-group-text border-0 bg-light"><i class="bi bi-bank text-muted"></i></span>
-                        <input asp-for="NumeroCompteDestination" type="text" class="form-control border-0 bg-light shadow-none fw-bold" placeholder="FRXXXX..." required>
-                    </div>
+                    <label class="form-label text-muted fw-semibold small text-uppercase" asp-for="NumeroCompteDestination">Destination Account</label>
+                    <select asp-for="NumeroCompteDestination" class="form-select form-select-lg bg-light border-0 shadow-none" required>
+                        <option value="">-- Select destination account --</option>
+                        @foreach (var c in destinationComptes)
+                        {
+                            <option value="@c.NumeroCompte">@c.NumeroCompte - @c.Proprietaire (€ @c.Solde.ToString("N2"))</option>
+                        }
+                    </select>
                 </div>
 
                 <!-- Amount -->
