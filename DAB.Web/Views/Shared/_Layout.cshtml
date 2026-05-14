@@ -11,12 +11,18 @@
 </head>
 <body>
     <div class="wrapper">
-        <partial name="_Sidebar" />
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <partial name="_Sidebar" />
+        }
 
-        <div class="main-content">
-            <partial name="_Navbar" />
+        <div class="main-content @(User.Identity?.IsAuthenticated == true ? "" : "d-flex justify-content-center align-items-center w-100")">
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <partial name="_Navbar" />
+            }
 
-            <div class="content-body">
+            <div class="content-body w-100">
                 @if (TempData["Success"] != null)
                 {
                     <div class="alert alert-success border-0 shadow-sm alert-dismissible fade show" role="alert">

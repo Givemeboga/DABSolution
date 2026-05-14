@@ -14,10 +14,23 @@ namespace DAB.Web.Controllers
             _service = service;
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             var data = await _service.GetAll();
             return View(data);
+        }
+
+        [Authorize(Roles = "User")]
+        public IActionResult Retrait()
+        {
+            return View();
+        }
+
+        [Authorize(Roles = "User")]
+        public IActionResult Transfert()
+        {
+            return View();
         }
     }
 }
