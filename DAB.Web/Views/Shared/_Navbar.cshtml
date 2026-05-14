@@ -16,8 +16,7 @@
                 <span class="d-none d-md-inline fw-semibold text-dark">User</span>
             </button>
             <ul class="dropdown-menu dropdown-menu-end border-0 shadow" aria-labelledby="userDropdown">
-                <li><a class="dropdown-item" href="#"><i class="bi bi-person me-2"></i> Profile</a></li>
-                <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i> Settings</a></li>
+                <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index"><i class="bi bi-person me-2"></i> Profile</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li>
                     <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">

@@ -1,3 +1,4 @@
+@model IReadOnlyList<DAB.Web.Models.Dab>
 @{
     ViewData["Title"] = "Distributed ATMs";
 }
@@ -7,59 +8,56 @@
         <h4 class="fw-bold mb-0 text-dark">ATM Infrastructure</h4>
         <p class="text-muted mb-0">Overview of all active Distributeurs Automatiques de Billets</p>
     </div>
-    <button class="btn btn-primary d-flex align-items-center gap-2">
+    <a asp-action="Map" class="btn btn-primary d-flex align-items-center gap-2">
         <i class="bi bi-geo-alt"></i> Map View
-    </button>
+    </a>
 </div>
 
 <div class="row g-4">
-    <!-- DAB Card -->
-    <div class="col-12 col-md-6 col-lg-4">
-        <div class="fintech-card">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2 fw-bold d-flex align-items-center gap-2">
-                    <span class="spinner-grow spinner-grow-sm text-success" role="status" style="width: 8px; height: 8px;"></span> Online
-                </span>
-                <span class="text-muted small"><i class="bi bi-diagram-3"></i> 2 Accounts</span>
-            </div>
-            
-            <div class="text-center my-4">
-                <div class="bg-light rounded-circle d-inline-flex p-4 mb-3 mx-auto">
-                    <i class="bi bi-cash-stack text-dark fs-1"></i>
+    @foreach (var dab in Model)
+    {
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="fintech-card @(dab.IsActive ? string.Empty : "bg-light border")">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    @if (dab.IsActive)
+                    {
+                        <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2 fw-bold d-flex align-items-center gap-2">
+                            <span class="spinner-grow spinner-grow-sm text-success" role="status" style="width: 8px; height: 8px;"></span> Online
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-pill px-3 py-2 fw-bold d-flex align-items-center gap-2">
+                            <i class="bi bi-dash-circle"></i> Offline
+                        </span>
+                    }
+                    <span class="text-muted small"><i class="bi bi-diagram-3"></i> @dab.AccountsCount Accounts</span>
                 </div>
-                <h4 class="fw-bold text-dark mb-1">DAB-P1</h4>
-                <p class="text-muted fs-6 mb-0"><i class="bi bi-geo-fill me-1"></i>Gare de Lyon</p>
-            </div>
 
-            <div class="d-flex gap-2">
-                <button class="btn btn-light w-50 fw-bold border text-dark">Logs</button>
-                <button class="btn btn-outline-danger w-50 fw-bold">Disable</button>
+                <div class="text-center my-4 @(dab.IsActive ? string.Empty : "opacity-50")">
+                    <div class="bg-light rounded-circle d-inline-flex p-4 mb-3 mx-auto">
+                        <i class="bi bi-cash-stack text-dark fs-1"></i>
+                    </div>
+                    <h4 class="fw-bold text-dark mb-1">@dab.DABId</h4>
+                    <p class="text-muted fs-6 mb-0"><i class="bi bi-geo-fill me-1"></i>@dab.Localisation</p>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <a asp-action="Logs" asp-route-id="@dab.Id" class="btn btn-light w-50 fw-bold border text-dark">Logs</a>
+                    @if (dab.IsActive)
+                    {
+                        <form asp-action="Disable" asp-route-id="@dab.Id" method="post" class="w-50">
+                            <button type="submit" class="btn btn-outline-danger w-100 fw-bold">Disable</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <form asp-action="Activate" asp-route-id="@dab.Id" method="post" class="w-50">
+                            <button type="submit" class="btn btn-primary w-100 fw-bold">Activate</button>
+                        </form>
+                    }
+                </div>
             </div>
         </div>
-    </div>
-    
-    <!-- DAB Card Inactive -->
-    <div class="col-12 col-md-6 col-lg-4">
-        <div class="fintech-card bg-light border">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-pill px-3 py-2 fw-bold d-flex align-items-center gap-2">
-                    <i class="bi bi-dash-circle"></i> Offline
-                </span>
-                <span class="text-muted small"><i class="bi bi-diagram-3"></i> 0 Accounts</span>
-            </div>
-            
-            <div class="text-center my-4 opacity-50">
-                <div class="bg-white border rounded-circle d-inline-flex p-4 mb-3 mx-auto">
-                    <i class="bi bi-cash-stack text-muted fs-1"></i>
-                </div>
-                <h4 class="fw-bold text-dark mb-1">DAB-M1</h4>
-                <p class="text-muted fs-6 mb-0"><i class="bi bi-geo-fill me-1"></i>Marseille Centre</p>
-            </div>
-
-            <div class="d-flex gap-2">
-                <button class="btn btn-white w-50 fw-bold border text-dark bg-white">Logs</button>
-                <button class="btn btn-primary w-50 fw-bold">Activate</button>
-            </div>
-        </div>
-    </div>
+    }
 </div>

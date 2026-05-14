@@ -1,0 +1,66 @@
+@model DAB.Web.Models.Compte
+@{
+    ViewData["Title"] = "Update Account";
+}
+
+<div class="row align-items-center justify-content-center pt-4">
+    <div class="col-12 col-md-8 col-lg-6">
+        <div class="fintech-card p-5 border-top border-4 border-primary">
+            <div class="text-center mb-4">
+                <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3 mx-auto">
+                    <i class="bi bi-pencil-square text-primary fs-2"></i>
+                </div>
+                <h3 class="fw-bold text-dark">Update Account</h3>
+                <p class="text-muted">Edit the selected customer account</p>
+            </div>
+
+            <form asp-action="Edit" asp-route-id="@Model.Id" method="post">
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="BanqueId" />
+                <input type="hidden" asp-for="DabId" />
+
+                <div class="mb-3">
+                    <label asp-for="NumeroCompte" class="form-label fw-bold">Account Number (IBAN)</label>
+                    <input asp-for="NumeroCompte" class="form-control form-control-lg bg-light border-0" placeholder="e.g. FR1050" required />
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Proprietaire" class="form-label fw-bold">Account Holder (Proprietaire)</label>
+                    <input asp-for="Proprietaire" class="form-control form-control-lg bg-light border-0" placeholder="e.g. John Doe" required />
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Solde" class="form-label fw-bold">Balance</label>
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-text bg-light border-0">€</span>
+                        <input asp-for="Solde" type="number" step="0.01" min="0" class="form-control bg-light border-0" placeholder="0.00" required />
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Type" class="form-label fw-bold">Account Type</label>
+                    <select asp-for="Type" class="form-select form-select-lg bg-light border-0">
+                        <option value="1">Courant (Checking)</option>
+                        <option value="0">Epargne (Savings)</option>
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="Etat" class="form-label fw-bold">Account Status</label>
+                    <select asp-for="Etat" class="form-select form-select-lg bg-light border-0">
+                        <option value="0">Actif</option>
+                        <option value="1">Gelé</option>
+                        <option value="2">Suspendu</option>
+                        <option value="3">Fermé</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold shadow-sm mb-3">Update Account</button>
+
+                <div class="text-center">
+                    <a href="/Comptes" class="text-muted text-decoration-none">Back to list</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,36 @@
+@model DAB.Web.Models.Banque
+@{
+    ViewData["Title"] = "Bank Details";
+}
+
+<div class="row align-items-center justify-content-center pt-4">
+    <div class="col-12 col-md-8 col-lg-6">
+        <div class="fintech-card p-5 border-top border-4 border-primary">
+            <div class="text-center mb-4">
+                <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3 mx-auto">
+                    <i class="bi bi-bank text-primary fs-2"></i>
+                </div>
+                <h3 class="fw-bold text-dark">@Model.Nom</h3>
+                <p class="text-muted">Code: @Model.Code</p>
+            </div>
+
+            <div class="mb-3">
+                <div class="d-flex align-items-center gap-2 text-muted">
+                    <i class="bi bi-geo-alt"></i>
+                    <span>@Model.Rue, @Model.Ville</span>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <div class="d-flex align-items-center gap-2 text-muted">
+                    <i class="bi bi-envelope"></i>
+                    <span>@Model.Email</span>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <a href="/Banques" class="btn btn-outline-primary">Back to list</a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -36,6 +36,40 @@ namespace DAB.Web.Controllers
             }
             return View(compte);
         }
+
+    public async Task<IActionResult> Edit(int id)
+    {
+        var compte = await _http.GetFromJsonAsync<Compte>($"api/comptes/{id}");
+        if (compte == null)
+        {
+            return NotFound();
+        }
+
+        return View(compte);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Edit(int id, Compte compte)
+    {
+        if (id != compte.Id)
+        {
+            return BadRequest();
+        }
+
+        if (ModelState.IsValid)
+        {
+            var response = await _http.PutAsJsonAsync($"api/comptes/{id}", compte);
+            if (response.IsSuccessStatusCode)
+            {
+                TempData["Success"] = "Account successfully updated.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            ModelState.AddModelError(string.Empty, "Unable to update account.");
+        }
+
+        return View(compte);
+    }
         
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
