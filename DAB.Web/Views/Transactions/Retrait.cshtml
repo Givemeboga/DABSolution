@@ -1,5 +1,7 @@
+@model DAB.Web.Models.Transaction
 @{
     ViewData["Title"] = "New Withdrawal";
+    var comptes = ViewBag.Comptes as List<DAB.Web.Models.Compte> ?? new List<DAB.Web.Models.Compte>();
 }
 
 <div class="row min-vh-100 align-items-center justify-content-center">
@@ -13,40 +15,31 @@
                 <p class="text-muted">Enter withdrawal details below</p>
             </div>
 
-            <form>
+            <form asp-action="Retrait" method="post">
                 <!-- Select Account -->
                 <div class="mb-4">
-                    <label class="form-label text-muted fw-semibold small text-uppercase">From Account</label>
-                    <select class="form-select form-select-lg bg-light border-0 shadow-none">
-                        <option value="1">FR9999 - John Doe (€ 1,000.00)</option>
-                        <option value="2">FR1001 - Alice Dupont (€ 5,000.00)</option>
-                    </select>
-                </div>
-
-                <!-- Select DAB -->
-                <div class="mb-4">
-                    <label class="form-label text-muted fw-semibold small text-uppercase">ATM Location (DAB)</label>
-                    <select class="form-select form-select-lg bg-light border-0 shadow-none">
-                        <option value="1">DAB-P1 (Gare de Lyon)</option>
+                    <label class="form-label text-muted fw-semibold small text-uppercase" asp-for="CompteId">From Account</label>
+                    <select asp-for="CompteId" class="form-select form-select-lg bg-light border-0 shadow-none" required>
+                        <option value="">-- Select an account --</option>
+                        @foreach (var c in comptes)
+                        {
+                            <option value="@c.Id">@c.NumeroCompte - @c.Proprietaire (€ @c.Solde.ToString("N2"))</option>
+                        }
                     </select>
                 </div>
 
                 <!-- Amount -->
                 <div class="mb-5">
-                    <label class="form-label text-muted fw-semibold small text-uppercase">Amount</label>
+                    <label class="form-label text-muted fw-semibold small text-uppercase" asp-for="Montant">Amount</label>
                     <div class="input-group input-group-lg">
                         <span class="input-group-text border-0 bg-light fw-bold text-dark">€</span>
-                        <input type="number" class="form-control border-0 bg-light shadow-none fw-bold fs-4" placeholder="0.00" step="10">
-                    </div>
-                    <div class="form-text mt-2 d-flex justify-content-between">
-                        <span>Min: €10</span>
-                        <span>Daily Limit: €1,000</span>
+                        <input asp-for="Montant" type="number" class="form-control border-0 bg-light shadow-none fw-bold fs-4" placeholder="0.00" step="10" min="10" required>
                     </div>
                 </div>
 
                 <!-- Autre Agence -->
                 <div class="form-check form-switch mb-5">
-                    <input class="form-check-input focus-danger" type="checkbox" id="autreAgence">
+                    <input class="form-check-input focus-danger" type="checkbox" asp-for="AutreAgence" id="autreAgence" value="true">
                     <label class="form-check-label" for="autreAgence">External ATM / Another Agency Fee warning</label>
                 </div>
 

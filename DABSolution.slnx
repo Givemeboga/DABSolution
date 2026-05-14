@@ -1,4 +1,6 @@
 <Solution>
   <Project Path="DAB.API/DAB.API.csproj" />
-  <Project Path="DAB.Web/DAB.Web.csproj" />
+  <Project Path="DAB.Web/DAB.Web.csproj">
+    <BuildDependency Project="DAB.API/DAB.API.csproj" />
+  </Project>
 </Solution>

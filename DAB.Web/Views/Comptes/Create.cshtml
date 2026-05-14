@@ -1,0 +1,55 @@
+@model DAB.Web.Models.Compte
+@{
+    ViewData["Title"] = "Add New Account";
+}
+
+<div class="row align-items-center justify-content-center pt-4">
+    <div class="col-12 col-md-8 col-lg-6">
+        <div class="fintech-card p-5 border-top border-4 border-success">
+            <div class="text-center mb-4">
+                <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3 mx-auto">
+                    <i class="bi bi-wallet2 text-success fs-2"></i>
+                </div>
+                <h3 class="fw-bold text-dark">Register Account</h3>
+                <p class="text-muted">Create a new customer account in the network</p>
+            </div>
+
+            <form asp-action="Create" method="post">
+                <div class="mb-3">
+                    <label asp-for="NumeroCompte" class="form-label fw-bold">Account Number (IBAN)</label>
+                    <input asp-for="NumeroCompte" class="form-control form-control-lg bg-light border-0" placeholder="e.g. FR1050" required />
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Proprietaire" class="form-label fw-bold">Account Holder (Proprietaire)</label>
+                    <input asp-for="Proprietaire" class="form-control form-control-lg bg-light border-0" placeholder="e.g. John Doe" required />
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Solde" class="form-label fw-bold">Initial Balance</label>
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-text bg-light border-0">€</span>
+                        <input asp-for="Solde" type="number" step="0.01" min="0" class="form-control bg-light border-0" placeholder="0.00" required />
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="Type" class="form-label fw-bold">Account Type</label>
+                    <select asp-for="Type" class="form-select form-select-lg bg-light border-0">
+                        <option value="1">Courant (Checking)</option>
+                        <option value="0">Epargne (Savings)</option>
+                    </select>
+                </div>
+                
+                <input type="hidden" asp-for="BanqueId" value="1" />
+                <input type="hidden" asp-for="DabId" value="1" />
+
+                <button type="submit" class="btn btn-success btn-lg w-100 fw-bold shadow-sm mb-3">Save Account</button>
+                
+                <div class="text-center">
+                    <a href="/Comptes" class="text-muted text-decoration-none">Back to list</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -14,6 +14,8 @@
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<TransactionRetrait> TransactionRetraits { get; set; }
         public DbSet<TransactionTransfert> TransactionTransferts { get; set; }
+        public DbSet<CarteBancaire> CartesBancaires { get; set; }
+        public DbSet<Réclamation> Réclamations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -34,6 +36,22 @@
                 .Property(t => t.Montant)
                 .HasColumnType("decimal(18,2)");
 
+            modelBuilder.Entity<CarteBancaire>()
+                .Property(c => c.LimitRetraitQuotidien)
+                .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<CarteBancaire>()
+                .Property(c => c.TotalRetraitAujourd)
+                .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<Compte>()
+                .Property(c => c.LimitRetraitQuotidien)
+                .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<Compte>()
+                .Property(c => c.TotalRetraitAujourd)
+                .HasColumnType("decimal(18,2)");
+
             // Relationships
             modelBuilder.Entity<Compte>()
                 .HasOne(c => c.Banque)
@@ -51,6 +69,26 @@
                 .HasOne(t => t.Compte)
                 .WithMany(c => c.Transactions)
                 .HasForeignKey(t => t.CompteId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // CarteBancaire Relationships
+            modelBuilder.Entity<CarteBancaire>()
+                .HasOne(c => c.Compte)
+                .WithMany(compte => compte.CartesBancaires)
+                .HasForeignKey(c => c.CompteId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Réclamation Relationships
+            modelBuilder.Entity<Réclamation>()
+                .HasOne(r => r.Transaction)
+                .WithMany()
+                .HasForeignKey(r => r.TransactionId)
+                .OnDelete(DeleteBehavior.NoAction);  // Changed from Cascade to prevent multiple cascade paths
+
+            modelBuilder.Entity<Réclamation>()
+                .HasOne(r => r.Compte)
+                .WithMany(c => c.Réclamations)
+                .HasForeignKey(r => r.CompteId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             // Seed Data

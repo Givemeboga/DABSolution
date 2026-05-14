@@ -1,3 +1,4 @@
+@model DAB.Web.Models.DashboardViewModel
 @{
     ViewData["Title"] = "Dashboard";
 }
@@ -9,14 +10,11 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div>
                     <h6 class="text-muted fw-bold mb-1 text-uppercase">Total Accounts</h6>
-                    <h3 class="fw-bold mb-0 text-dark">4</h3>
+                    <h3 class="fw-bold mb-0 text-dark">@Model.TotalAccounts</h3>
                 </div>
                 <div class="icon-box bg-primary text-white" style="background-color: var(--primary) !important;">
                     <i class="bi bi-wallet2 text-white"></i>
                 </div>
-            </div>
-            <div class="text-success small fw-semibold">
-                <i class="bi bi-arrow-up-right me-1"></i>+2 this month
             </div>
         </div>
     </div>
@@ -27,14 +25,11 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div>
                     <h6 class="text-muted fw-bold mb-1 text-uppercase">Total Balance</h6>
-                    <h3 class="fw-bold mb-0 text-dark">€ 14,200.50</h3>
+                    <h3 class="fw-bold mb-0 text-dark">€ @Model.TotalBalance.ToString("N2")</h3>
                 </div>
                 <div class="icon-box bg-success text-white">
                     <i class="bi bi-currency-euro text-white"></i>
                 </div>
-            </div>
-            <div class="text-success small fw-semibold">
-                <i class="bi bi-arrow-up-right me-1"></i>+12.5% vs last month
             </div>
         </div>
     </div>
@@ -45,14 +40,11 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div>
                     <h6 class="text-muted fw-bold mb-1 text-uppercase">Transactions</h6>
-                    <h3 class="fw-bold mb-0 text-dark">142</h3>
+                    <h3 class="fw-bold mb-0 text-dark">@Model.TransactionsCount</h3>
                 </div>
                 <div class="icon-box bg-secondary text-white">
                     <i class="bi bi-arrow-left-right text-white"></i>
                 </div>
-            </div>
-            <div class="text-muted small fw-semibold">
-                Processed this week
             </div>
         </div>
     </div>
@@ -63,14 +55,11 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div>
                     <h6 class="text-muted fw-bold mb-1 text-uppercase">Connected ATMs</h6>
-                    <h3 class="fw-bold mb-0 text-dark">2</h3>
+                    <h3 class="fw-bold mb-0 text-dark">@Model.ConnectedAtms</h3>
                 </div>
                 <div class="icon-box bg-warning text-white">
                     <i class="bi bi-cash-stack text-white"></i>
                 </div>
-            </div>
-            <div class="text-muted small fw-semibold">
-                All systems operational
             </div>
         </div>
     </div>
@@ -96,54 +85,44 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>
-                                <div class="d-flex align-items-center gap-3">
-                                    <div class="bg-primary text-white p-2 rounded">
-                                        <i class="bi bi-send-check"></i>
+                        @if (!Model.RecentTransactions.Any())
+                        {
+                            <tr>
+                                <td colspan="4" class="text-center text-muted">No recent activity</td>
+                            </tr>
+                        }
+                        @foreach (var tx in Model.RecentTransactions)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center gap-3">
+                                        @if (tx.TransactionType == "Transfert")
+                                        {
+                                            <div class="bg-primary text-white p-2 rounded">
+                                                <i class="bi bi-send-check"></i>
+                                            </div>
+                                            <div>
+                                                <div class="fw-bold text-dark">Transfer</div>
+                                                <div class="text-muted small">To: @tx.NumeroCompteDestination</div>
+                                            </div>
+                                        }
+                                        else 
+                                        {
+                                            <div class="bg-danger text-white p-2 rounded">
+                                                <i class="bi bi-box-arrow-up-right"></i>
+                                            </div>
+                                            <div>
+                                                <div class="fw-bold text-dark">Withdrawal</div>
+                                                <div class="text-muted small">Account ID: @tx.CompteId</div>
+                                            </div>
+                                        }
                                     </div>
-                                    <div>
-                                        <div class="fw-bold text-dark">Transfer</div>
-                                        <div class="text-muted small">To: FR1002</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="text-muted">Today, 14:30</td>
-                            <td class="fw-bold text-danger">- €250.00</td>
-                            <td><span class="status-badge badge-success">Completed</span></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="d-flex align-items-center gap-3">
-                                    <div class="bg-danger text-white p-2 rounded">
-                                        <i class="bi bi-box-arrow-up-right"></i>
-                                    </div>
-                                    <div>
-                                        <div class="fw-bold text-dark">Withdrawal</div>
-                                        <div class="text-muted small">ATM: DAB-P1</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="text-muted">Yesterday, 09:15</td>
-                            <td class="fw-bold text-danger">- €100.00</td>
-                            <td><span class="status-badge badge-success">Completed</span></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="d-flex align-items-center gap-3">
-                                    <div class="bg-success text-white p-2 rounded text-success">
-                                        <i class="bi bi-arrow-down-left"></i>
-                                    </div>
-                                    <div>
-                                        <div class="fw-bold text-dark">Deposit</div>
-                                        <div class="text-muted small">From: FR9999</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="text-muted">Oct 24, 2026</td>
-                            <td class="fw-bold text-success">+ €1,500.00</td>
-                            <td><span class="status-badge badge-success">Completed</span></td>
-                        </tr>
+                                </td>
+                                <td class="text-muted">@tx.Date.ToString("MMM dd, yyyy HH:mm")</td>
+                                <td class="fw-bold text-dark">€@tx.Montant.ToString("N2")</td>
+                                <td><span class="status-badge badge-success">Completed</span></td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>

@@ -1,3 +1,4 @@
+@model List<DAB.Web.Models.Compte>
 @{
     ViewData["Title"] = "Accounts Overview";
 }
@@ -8,16 +9,8 @@
 </div>
 
 <div class="fintech-card">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div class="input-group" style="max-width: 300px;">
-            <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
-            <input type="text" class="form-control border-start-0 ps-0" placeholder="Search accounts...">
-        </div>
-        <button class="btn btn-outline-secondary"><i class="bi bi-funnel me-2"></i>Filter</button>
-    </div>
-
-    <div class="table-responsive">
-        <table class="table table-fintech table-hover">
+<div class="table-responsive">
+    <table class="table table-fintech table-hover">
             <thead>
                 <tr>
                     <th>Account Info</th>
@@ -28,57 +21,45 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- Dummy Row 1 -->
-                <tr>
-                    <td>
-                        <div class="d-flex align-items-center">
-                            <div class="bg-primary text-white rounded p-2 me-3">
-                                <i class="bi bi-wallet2"></i>
+                @foreach (var compte in Model)
+                {
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="bg-primary text-white rounded p-2 me-3">
+                                    <i class="bi bi-wallet2"></i>
+                                </div>
+                                <div>
+                                    <span class="d-block fw-bold">@compte.NumeroCompte</span>
+                                    <span class="text-muted small">@(compte.Banque?.Nom ?? "Unknown Bank")</span>
+                                </div>
                             </div>
-                            <div>
-                                <span class="d-block fw-bold">FR1001</span>
-                                <span class="text-muted small">Banque de Paris</span>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <span class="fw-semibold">Alice Dupont</span>
-                    </td>
-                    <td><span class="badge bg-primary text-white status-badge">Courant</span></td>
-                    <td>
-                        <span class="fs-5 fw-bold text-dark">€ 5,000.00</span>
-                    </td>
-                    <td class="text-end">
-                        <a href="#" class="btn btn-sm btn-light text-primary me-2"><i class="bi bi-eye"></i></a>
-                        <a href="#" class="btn btn-sm btn-light text-muted"><i class="bi bi-three-dots-vertical"></i></a>
-                    </td>
-                </tr>
-                
-                <!-- Dummy Row 2 -->
-                <tr>
-                    <td>
-                        <div class="d-flex align-items-center">
-                            <div class="bg-success text-white rounded p-2 me-3">
-                                <i class="bi bi-piggy-bank"></i>
-                            </div>
-                            <div>
-                                <span class="d-block fw-bold">FR1002</span>
-                                <span class="text-muted small">Banque de Paris</span>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <span class="fw-semibold">Bob Martin</span>
-                    </td>
-                    <td><span class="badge bg-success text-white status-badge">Epargne</span></td>
-                    <td>
-                        <span class="fs-5 fw-bold text-success">€ 150.00</span>
-                    </td>
-                    <td class="text-end">
-                        <a href="#" class="btn btn-sm btn-light text-primary me-2"><i class="bi bi-eye"></i></a>
-                        <a href="#" class="btn btn-sm btn-light text-muted"><i class="bi bi-three-dots-vertical"></i></a>
-                    </td>
-                </tr>
+                        </td>
+                        <td>
+                            <span class="fw-semibold">@compte.Proprietaire</span>
+                        </td>
+                        <td>
+                            <span class="badge @(compte.Type == 0 ? "bg-success" : "bg-primary") text-white status-badge">
+                                @(compte.Type == 0 ? "Epargne" : "Courant")
+                            </span>
+                        </td>
+                        <td>
+                            <span class="fs-5 fw-bold text-dark">€ @compte.Solde.ToString("N2")</span>
+                        </td>
+                        <td class="text-end">
+                            <a href="#" class="btn btn-sm btn-light text-primary me-2"><i class="bi bi-eye"></i></a>
+                            <form asp-action="Delete" asp-route-id="@compte.Id" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this account?');">
+                                <button type="submit" class="btn btn-sm btn-light text-danger"><i class="bi bi-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-4">No accounts found.</td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>

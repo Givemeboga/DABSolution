@@ -1,97 +1,68 @@
+@model List<DAB.Web.Models.Transaction>
 @{
     ViewData["Title"] = "Transactions";
 }
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h4 class="fw-bold mb-0">Transaction History</h4>
-    <div>
-        <a href="/Transactions/Retrait" class="btn btn-outline-danger shadow-sm me-2"><i class="bi bi-box-arrow-up-right me-2"></i>Withdrawal</a>
-        <a href="/Transactions/Transfert" class="btn btn-primary shadow-sm"><i class="bi bi-send me-2"></i>Transfer</a>
-    </div>
+    @if (User.IsInRole("User"))
+    {
+        <div>
+            <a href="/Transactions/Retrait" class="btn btn-outline-danger shadow-sm me-2"><i class="bi bi-box-arrow-up-right me-2"></i>Withdrawal</a>
+            <a href="/Transactions/Transfert" class="btn btn-primary shadow-sm"><i class="bi bi-send me-2"></i>Transfer</a>
+        </div>
+    }
 </div>
 
 <div class="fintech-card">
-    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-4">
-        <ul class="nav nav-pills" id="transactionTabs">
-            <li class="nav-item">
-                <a class="nav-link active rounded-pill px-4 fw-medium" href="#">All</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link rounded-pill px-4 fw-medium text-muted" href="#">Transfers</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link rounded-pill px-4 fw-medium text-muted" href="#">Withdrawals</a>
-            </li>
-        </ul>
-        <div class="input-group" style="width: 250px;">
-            <span class="input-group-text bg-white border-end-0"><i class="bi bi-calendar3 text-muted"></i></span>
-            <input type="text" class="form-control border-start-0 ps-0" placeholder="Filter by date">
-        </div>
-    </div>
-
-    <!-- Timeline Style Transactions -->
-    <div class="table-responsive pt-2">
-        <table class="table table-hover table-fintech align-middle mb-0">
+<!-- Timeline Style Transactions -->
+<div class="table-responsive pt-2">
+    <table class="table table-hover table-fintech align-middle mb-0">
             <tbody>
-                <!-- Item 1 -->
-                <tr>
-                    <td style="width: 60px;">
-                        <div class="bg-primary text-white p-3 rounded-circle d-flex align-items-center justify-content-center mx-auto" style="width: 48px; height: 48px;">
-                            <i class="bi bi-send fs-5"></i>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="fw-bold text-dark">Sent to FR1001</div>
-                        <div class="text-muted small">Account FR9999</div>
-                    </td>
-                    <td>
-                        <div class="text-muted">Today, 20:38</div>
-                    </td>
-                    <td class="text-end">
-                        <div class="fs-5 fw-bold text-dark">- € 150.00</div>
-                        <div class="badge bg-success bg-opacity-10 text-success rounded-pill px-2 py-1 mt-1">Completed</div>
-                    </td>
-                </tr>
-                
-                <!-- Item 2 -->
-                <tr>
-                    <td>
-                        <div class="bg-success text-white p-3 rounded-circle d-flex align-items-center justify-content-center mx-auto" style="width: 48px; height: 48px;">
-                            <i class="bi bi-arrow-down-left fs-5"></i>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="fw-bold text-dark">Received from Alice Dupont</div>
-                        <div class="text-muted small">Account FR1002</div>
-                    </td>
-                    <td>
-                        <div class="text-muted">Yesterday, 14:12</div>
-                    </td>
-                    <td class="text-end">
-                        <div class="fs-5 fw-bold text-success">+ € 300.00</div>
-                        <div class="badge bg-success bg-opacity-10 text-success rounded-pill px-2 py-1 mt-1">Completed</div>
-                    </td>
-                </tr>
-                
-                <!-- Item 3 -->
-                <tr>
-                    <td>
-                        <div class="bg-danger text-white p-3 rounded-circle d-flex align-items-center justify-content-center mx-auto" style="width: 48px; height: 48px;">
-                            <i class="bi bi-cash fs-5"></i>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="fw-bold text-dark">ATM Withdrawal</div>
-                        <div class="text-muted small">DAB-P1 - Gare de Lyon</div>
-                    </td>
-                    <td>
-                        <div class="text-muted">May 05, 2026</div>
-                    </td>
-                    <td class="text-end">
-                        <div class="fs-5 fw-bold text-dark">- € 50.00</div>
-                        <div class="badge bg-success bg-opacity-10 text-success rounded-pill px-2 py-1 mt-1">Completed</div>
-                    </td>
-                </tr>
+                @foreach (var tx in Model.OrderByDescending(t => t.Date))
+                {
+                    <tr>
+                        <td style="width: 60px;">
+                            @if (tx.TransactionType == "Transfert")
+                            {
+                                <div class="bg-primary text-white p-3 rounded-circle d-flex align-items-center justify-content-center mx-auto" style="width: 48px; height: 48px;">
+                                    <i class="bi bi-send fs-5"></i>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="bg-danger text-white p-3 rounded-circle d-flex align-items-center justify-content-center mx-auto" style="width: 48px; height: 48px;">
+                                    <i class="bi bi-cash fs-5"></i>
+                                </div>
+                            }
+                        </td>
+                        <td>
+                            @if (tx.TransactionType == "Transfert")
+                            {
+                                <div class="fw-bold text-dark">Transfer</div>
+                                <div class="text-muted small">To: @tx.NumeroCompteDestination (From Account: @tx.CompteId)</div>
+                            }
+                            else
+                            {
+                                <div class="fw-bold text-dark">ATM Withdrawal</div>
+                                <div class="text-muted small">From Account: @tx.CompteId @(tx.AutreAgence == true ? "(Other Agency)" : "")</div>
+                            }
+                        </td>
+                        <td>
+                            <div class="text-muted">@tx.Date.ToString("g")</div>
+                        </td>
+                        <td class="text-end">
+                            <div class="fs-5 fw-bold text-dark">- € @tx.Montant.ToString("N2")</div>
+                            <div class="badge bg-success bg-opacity-10 text-success rounded-pill px-2 py-1 mt-1">Completed</div>
+                        </td>
+                    </tr>
+                }
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="4" class="text-center text-muted">No transactions found.</td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>

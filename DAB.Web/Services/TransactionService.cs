@@ -17,9 +17,14 @@ namespace DAB.Web.Services
             return await _http.GetFromJsonAsync<List<Transaction>>("api/transactions") ?? new List<Transaction>();
         }
 
-        public async Task Create(Transaction t)
+        public async Task Retrait(Transaction t)
         {
-            await _http.PostAsJsonAsync("api/transactions", t);
+            await _http.PostAsJsonAsync("api/transactions/retrait", t);
+        }
+
+        public async Task Transfert(Transaction t)
+        {
+            await _http.PostAsJsonAsync("api/transactions/transfert", t);
         }
     }
 }
