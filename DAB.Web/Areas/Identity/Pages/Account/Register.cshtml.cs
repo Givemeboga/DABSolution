@@ -102,6 +102,16 @@ namespace DAB.Web.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+            [Required]
+            [DataType(DataType.Currency)]
+            [Display(Name = "Initial Balance")]
+            [Range(0, 1000000, ErrorMessage = "Balance must be a positive number.")]
+            public decimal Solde { get; set; }
+
+            [Required]
+            [Display(Name = "Account Type")]
+            public int Type { get; set; }
         }
 
 
@@ -130,7 +140,7 @@ namespace DAB.Web.Areas.Identity.Pages.Account
                     // Automatically assign "User" role to newly registered users
                     await _userManager.AddToRoleAsync(user, "User");
 
-                    var accountCreated = await CreateDefaultAccountAsync(Input.Email);
+                    var accountCreated = await CreateDefaultAccountAsync(Input.Email, Input.Solde, Input.Type);
                     if (!accountCreated)
                     {
                         await _userManager.DeleteAsync(user);
@@ -150,15 +160,10 @@ namespace DAB.Web.Areas.Identity.Pages.Account
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
-                    if (_userManager.Options.SignIn.RequireConfirmedAccount)
-                    {
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
-                    }
-                    else
-                    {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(returnUrl);
-                    }
+                    // Removed the block that was automatically logging the user/Admin into the newly created account.
+                    // Instead of signing them in, we just redirect back so the Admin can continue managing the system.
+                    TempData["StatusMessage"] = "Account successfully added.";
+                    return LocalRedirect("/Comptes");
                 }
                 foreach (var error in result.Errors)
                 {
@@ -170,15 +175,15 @@ namespace DAB.Web.Areas.Identity.Pages.Account
             return Page();
         }
 
-        private async Task<bool> CreateDefaultAccountAsync(string email)
+        private async Task<bool> CreateDefaultAccountAsync(string email, decimal solde, int type)
         {
             var http = _httpClientFactory.CreateClient("API");
             var compte = new DAB.Web.Models.Compte
             {
                 NumeroCompte = $"FR{DateTime.UtcNow:yyyyMMddHHmmss}",
                 Proprietaire = email,
-                Solde = 0m,
-                Type = 1,
+                Solde = solde,
+                Type = type,
                 BanqueId = 1,
                 DabId = 1
             };

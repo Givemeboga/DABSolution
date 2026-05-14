@@ -22,6 +22,21 @@
                 </div>
 
                 <div class="form-floating mb-3">
+                    <input asp-for="Input.Solde" class="form-control" type="number" step="0.01" min="0" aria-required="true" placeholder="0.00" />
+                    <label asp-for="Input.Solde">Initial Balance (€)</label>
+                    <span asp-validation-for="Input.Solde" class="text-danger small"></span>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <select asp-for="Input.Type" class="form-select" aria-required="true">
+                        <option value="1">Courant (Checking)</option>
+                        <option value="2">Épargne (Savings)</option>
+                    </select>
+                    <label asp-for="Input.Type">Account Type</label>
+                    <span asp-validation-for="Input.Type" class="text-danger small"></span>
+                </div>
+
+                <div class="form-floating mb-3">
                     <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
                     <label asp-for="Input.Password">Password</label>
                     <span asp-validation-for="Input.Password" class="text-danger small"></span>
